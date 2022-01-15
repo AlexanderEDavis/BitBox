@@ -62,7 +62,6 @@ const uint8_t rdy[] = {
 
 // Defines the flags and variables used
 int denary = 0;
-int oldDenary = 0;
 bool bit1 = false;
 bool bit2 = false;
 bool bit3 = false;
@@ -78,7 +77,6 @@ void setup() {
   Serial.begin(9600);
   Serial.println("DC Voltage Test");
   denary = 0;
-  oldDenary = 0;
   // Set the brightness to 5 (0=dimmest 7=brightest)
   display.setBrightness(7);
 
@@ -89,37 +87,19 @@ void setup() {
   display.clear();
 
   // Set bitFlags 1-9
+  bit1 = false;
+  bit2 = false;
+  bit3 = false;
+  bit4 = false;
+  bit5 = false;
+  bit6 = false;
+  bit7 = false;
+  bit8 = false;
+  bit9 = false;
   int i;
   for (i = 1; i < 10; i++) {
-    if (i == 1) {
-      bit1 = false;
-    }
-    if (i == 2) {
-      bit2 = false;
-    }
-    if (i == 3) {
-      bit3 = false;
-    }
-    if (i == 4) {
-      bit4 = false;
-    }
-    if (i == 5) {
-      bit5 = false;
-    }
-    if (i == 6) {
-      bit6 = false;
-    }
-    if (i == 7) {
-      bit7 = false;
-    }
-    if (i == 8) {
-      bit8 = false;
-    }
-    if (i == 9) {
-      bit9 = false;
-    }
     display.showNumberDec(i);
-    delay(5);
+    delay(100);
   }
 
   display.clear();
@@ -132,7 +112,7 @@ void setup() {
 
 void resetSenseLoop() {
   adc_voltage = 0.0;
-  in_voltage = 0.0;
+  in_voltage <= 2.0;
 
   R1 = 30000.0;
   R2 = 7500.0;
@@ -150,12 +130,15 @@ void checkSenseLoop() {
   in_voltage = adc_voltage / (R2 / (R1 + R2)) ;
 }
 
+void voltageOutput() {
+  Serial.print(in_voltage);
+  delay(10);
+}
+
 void updateDisplay() {
   // Updates display if number chnaged
-  if (oldDenary != denary) {
-    oldDenary = denary;
-    display.showNumberDec(denary);
-  }
+  display.showNumberDec(denary);
+  //delay(10);
 }
 
 void loop() {
@@ -163,110 +146,125 @@ void loop() {
   resetSenseLoop();
   adc_value = analogRead(bit1pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit1 == false)) {
+  if ((in_voltage > 2) && (bit1 == false)) {
     denary += 1;
     bit1 = true;
-  } else if ((in_voltage <= 11) && (bit1 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit1 == true)) {
     denary -= 1;
     bit1 = false;
+    updateDisplay();
   }
 
   // Checks if bit 2 is active
   resetSenseLoop();
   adc_value = analogRead(bit2pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit2 == false)) {
+  if ((in_voltage > 2) && (bit2 == false)) {
     denary += 2;
     bit2 = true;
-  } else if ((in_voltage <= 11) && (bit2 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit2 == true)) {
     denary -= 2;
     bit2 = false;
+    updateDisplay();
   }
 
   // Checks if bit 3 is active
   resetSenseLoop();
   adc_value = analogRead(bit3pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit3 == false)) {
+  if ((in_voltage > 2) && (bit3 == false)) {
     denary += 4;
     bit3 = true;
-  } else if ((in_voltage <= 11) && (bit3 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit3 == true)) {
     denary -= 4;
     bit3 = false;
+    updateDisplay();
   }
 
   // Checks if bit 4 is active
   resetSenseLoop();
   adc_value = analogRead(bit4pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit4 == false)) {
+  if ((in_voltage > 2) && (bit4 == false)) {
     denary += 8;
     bit4 = true;
-  } else if ((in_voltage <= 11) && (bit4 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit4 == true)) {
     denary -= 8;
     bit4 = false;
+    updateDisplay();
   }
 
   // Checks if bit 5 is active
   resetSenseLoop();
   adc_value = analogRead(bit5pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit5 == false)) {
+  if ((in_voltage > 2) && (bit5 == false)) {
     denary += 16;
     bit5 = true;
-  } else if ((in_voltage <= 11) && (bit5 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit5 == true)) {
     denary -= 16;
     bit5 = false;
+    updateDisplay();
   }
 
   // Checks if bit 6 is active
   resetSenseLoop();
   adc_value = analogRead(bit6pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit6 == false)) {
+  if ((in_voltage > 2) && (bit6 == false)) {
     denary += 32;
     bit6 = true;
-  } else if ((in_voltage <= 11) && (bit6 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit6 == true)) {
     denary -= 32;
     bit6 = false;
+    updateDisplay();
   }
 
   // Checks if bit 7 is active
   resetSenseLoop();
   adc_value = analogRead(bit7pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit7 == false)) {
+  if ((in_voltage > 2) && (bit7 == false)) {
     denary += 64;
     bit7 = true;
-  } else if ((in_voltage <= 11) && (bit7 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit7 == true)) {
     denary -= 64;
     bit7 = false;
+    updateDisplay();
   }
 
   // Checks if bit 8 is active
   resetSenseLoop();
   adc_value = analogRead(bit8pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit8 == false)) {
+  if ((in_voltage > 2) && (bit8 == false)) {
     denary += 128;
     bit8 = true;
-  } else if ((in_voltage <= 11) && (bit8 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit8 == true)) {
     denary -= 128;
     bit8 = false;
+    updateDisplay();
   }
 
   // Checks if bit 9 is active
   resetSenseLoop();
   adc_value = analogRead(bit9pin);
   checkSenseLoop();
-  if ((in_voltage >= 11) && (bit9 == false)) {
+  if ((in_voltage > 2) && (bit9 == false)) {
     denary += 256;
     bit9 = true;
-  } else if ((in_voltage <= 11) && (bit9 == true)) {
+    updateDisplay();
+  } else if ((in_voltage <= 2) && (bit9 == true)) {
     denary -= 256;
     bit9 = false;
+    updateDisplay();
   }
-
-  // Calls updateDisplay function
-  updateDisplay();
 }
